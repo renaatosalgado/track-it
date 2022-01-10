@@ -27,7 +27,6 @@ export default function SignUpPage() {
 
     postSignUp(body)
       .then((res) => {
-        console.log("resposta do sign up", res.data);
         setLoading(false);
         navigate("/");
         alert("Seu cadastro foi realizado com sucesso!");

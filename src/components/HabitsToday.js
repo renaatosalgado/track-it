@@ -53,7 +53,6 @@ export default function HabitsToday() {
   const { dailyProgress, setDailyProgress } = useContext(DailyProgressContext);
 
   const [todayHabits, setTodayHabits] = useState([]);
-  const [checkedHabits, setCheckedHabits] = useState([]);
 
   const config = {
     headers: {
@@ -68,35 +67,31 @@ export default function HabitsToday() {
     //eslint-disable-next-line
   }, []);
 
+  function UpdateHabits() {
+    getTodayHabits(config).then((res) => setTodayHabits(res.data));
+  }
+
   function checkHabit(habit) {
-    console.log('entrada', habit)
-    if (habit.done === true) {
-      postUncheckHabit(habit.id, config).then(() => {
-        habit.currentSequence--;
-        const filteredHabits = checkedHabits.filter((h) => h !== habit.id);
-        setCheckedHabits(filteredHabits);
-        console.log("caiu no uncheck");
+    if (habit.done === false) {
+      postCheckHabit(habit.id, config).then(() => {
+        UpdateHabits();
+        calculateDailyProgress();
       });
     } else {
-      postCheckHabit(habit.id, config).then(() => {
-        habit.currentSequence++;
-        setCheckedHabits([...checkedHabits, habit.id]);
-        console.log("caiu no check");
+      postUncheckHabit(habit.id, config).then(() => {
+        UpdateHabits();
       });
     }
-    if (habit.currentSequence > habit.highestSequence) {
-      habit.highestSequence = habit.currentSequence;
-    }
-    calculateDailyProgress();
-    console.log("checked", checkedHabits);
-    console.log("today", todayHabits);
   }
 
   function calculateDailyProgress() {
-    const total = (checkedHabits.length / todayHabits.length) * 100;
+    const total =
+      (todayHabits.filter((e) => e.done === true).length / todayHabits.length) *
+      100;
     setDailyProgress(total);
-    console.log("progress", dailyProgress);
   }
+
+  calculateDailyProgress();
 
   return (
     <>
@@ -104,28 +99,38 @@ export default function HabitsToday() {
       <Container>
         <TodayHeader>
           <Weekday>{today}</Weekday>
-          <TodayMessage>
-            {checkedHabits.length === 0 || todayHabits.length === 0
+          <TodayMessage progress={dailyProgress}>
+            {dailyProgress === 0
               ? "Nenhum hábito concluído ainda"
-              : `${dailyProgress}% dos hábitos concluídos`}
+              : `${Math.round(dailyProgress)}% dos hábitos concluídos`}
           </TodayMessage>
         </TodayHeader>
         {todayHabits.map((habit, index) => (
           <HabitBox key={index}>
             <Info>
               <HabitName>{habit.name}</HabitName>
-              <Sequency>Sequência atual: {habit.currentSequence} dias</Sequency>
-              <Record>Seu recorde: {habit.highestSequence} dias</Record>
+              <Sequency
+                highscore={
+                  habit.currentSequence === habit.highestSequence &&
+                  habit.highestSequence !== 0
+                }
+              >
+                Sequência atual: <span>{habit.currentSequence} dias</span>
+              </Sequency>
+              <Record
+                highscore={
+                  habit.currentSequence === habit.highestSequence &&
+                  habit.highestSequence !== 0
+                }
+              >
+                Seu recorde: <span>{habit.highestSequence} dias</span>
+              </Record>
             </Info>
-            <Check>
+            <Check done={habit.done}>
               <ion-icon
                 name="checkbox"
                 onClick={() => {
                   checkHabit(habit);
-                  // calculateDailyProgress();
-                }}
-                checkedHabit={() => {
-                  return habit.done ? true : false
                 }}
               ></ion-icon>
             </Check>
@@ -160,7 +165,7 @@ const Weekday = styled.div`
 `;
 const TodayMessage = styled.div`
   font-size: 18px;
-  color: #bababa;
+  color: ${(props) => (props.progress > 0 ? "#8fc549" : "#bababa")};
   line-height: 23px;
 `;
 
@@ -190,15 +195,26 @@ const HabitName = styled.p`
 const Sequency = styled.p`
   color: #666666;
   font-size: 13px;
+
+  span {
+    color: ${(props) => (props.highscore ? "#8fc549" : "#666666")};
+  }
 `;
 
-const Record = Sequency;
+const Record = styled.p`
+  color: #666666;
+  font-size: 13px;
+
+  span {
+    color: ${(props) => (props.highscore ? "#8fc549" : "#666666")};
+  }
+`;
 
 const Check = styled.div`
   margin-right: 8px;
 
   ion-icon {
-    color: ${(props) => (props.checkedHabit ? "#8fc549" : "#ebebeb")};
+    color: ${(props) => (props.done ? "#8fc549" : "#ebebeb")};
     border-radius: 5px;
     width: 69px;
     height: 69px;

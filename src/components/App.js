@@ -12,7 +12,7 @@ import DailyProgressContext from "../contexts/DailyProgressContext";
 
 export default function App() {
   const [user, setUser] = useState(null);
-  const [dailyProgress, setDailyProgress] = useState(undefined);
+  const [dailyProgress, setDailyProgress] = useState(0);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -22,7 +22,7 @@ export default function App() {
           <Route path="sign-up" element={<SignUpPage />} />
         </Routes>
         <DailyProgressContext.Provider
-          value={(dailyProgress, setDailyProgress)}
+          value={{ dailyProgress, setDailyProgress }}
         >
           <Routes>
             <Route path="/habits" element={<Habits />} />

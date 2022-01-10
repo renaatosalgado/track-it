@@ -83,13 +83,10 @@ export default function Habits() {
       day.isSelected = false;
       const filteredDays = selectedDays.filter((d) => d !== day.id);
       setSelectedDays(filteredDays);
-      console.log("removeu");
     } else {
       day.isSelected = true;
       setSelectedDays([...selectedDays, day.id]);
-      console.log("adicinou");
     }
-    console.log(selectedDays);
   }
 
   function createHabit(event) {

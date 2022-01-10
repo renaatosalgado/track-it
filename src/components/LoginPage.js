@@ -26,7 +26,6 @@ export default function LoginPage() {
       postLogin(body)
         .then((res) => {
           setUser(res.data);
-          console.log("resposta do login", res.data);
           setLoading(false);
           navigate("/today");
         })
