@@ -18,6 +18,10 @@ This is an web application with which lots of people can manage their habits and
 
 By using this app any user can perceive how the daily habits are being sustained or not.
 
+Future feactures will be:
+- Login persistence
+- Habits historic
+
 ## Technologies
 The following tools and frameworks were used in the construction of the project:<br>
 <p>
