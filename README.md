@@ -16,7 +16,7 @@ This is an web application with which lots of people can manage their habits and
 - Mark done habits
 - Check daily progress
 
-By using this app any user can perceive how the habits are being sustained or not, or which has been the most neglected one.
+By using this app any user can perceive how the daily habits are being sustained or not.
 
 ## Technologies
 The following tools and frameworks were used in the construction of the project:<br>
