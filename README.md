@@ -2,7 +2,7 @@
 
 An easy habit tracker app, to help you enhance your discipline and achieve your personal goals.
 
-<img src="/assets/my-wallet-usage.gif" />
+<img src="/public/assets/track-it.gif" />
 
 Try it out now at https://track-it-blue.vercel.app/
 
